@@ -39,8 +39,12 @@ async def set_weight(message, state):
 async def send_calories(message, state):
     await state.update_data(weight=message.text)
     data = await state.get_data()
-    await message.answer(f"Ваша норма калирий {float(data['weight']) * 10 + float(data['growth']) * 6.25 - float(data['age']) * 5 + 5}")
-    await state.finish()
+    try:
+        await message.answer(f"Ваша норма калирий {float(data['weight']) * 10 + float(data['growth']) * 6.25 - float(data['age']) * 5 + 5}")
+    except ValueError:
+        await message.answer("Вы ввели не верные данные")
+    finally:
+        await state.finish()
 
 @dispatcher.message_handler(commands="start")
 async def start(message):
